@@ -98,3 +98,5 @@ config*.php
 vendor
 app.*.ini
 !app.template.ini
+
+photos
