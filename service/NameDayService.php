@@ -404,12 +404,10 @@ class NameDayService
 
       public static function getTodaysNames()
       {
-          //$month = idate("m");
-          //$day = idate("d");
-          $month = 2;
-          $day = 21;
+          $month = idate("m");
+          $day = idate("d");
           $names = NameDayService::$NAMEDAYS[$month][$day];
-          echo "Names for date [$month, $day]: " . implode($names, ", ") . "\n";
+          echo "Today's [$month, $day] names: " . implode($names, ", ") . "\n";
           return $names;
       }
   }

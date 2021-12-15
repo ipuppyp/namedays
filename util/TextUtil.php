@@ -6,7 +6,7 @@ private static $HU = array('/é/','/É/','/á/','/Á/','/ó/','/Ó/','/ö/','/Ö
 private static $EN = array('e','E','a','A','o','O','o','O','o','O','u','U','u','U','u','U','i','I','_');
 
    public static function replaceSpecChars($str) {
-       return preg_replace(TextUtil::$HU, TextUtil::$EN, $str);
+       return strtolower(preg_replace(TextUtil::$HU, TextUtil::$EN, $str));
    }
    
 }

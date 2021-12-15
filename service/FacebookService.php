@@ -4,7 +4,7 @@
 require_once __DIR__ . '/../vendor/autoload.php'; 
 
 class FacebookService {
-    
+       
     private $facebookApi;
     
     function __construct($appId, $appSecret, $accessToken) {
@@ -20,15 +20,12 @@ class FacebookService {
 
     function publishPhoto($pageId, $photoFolder, $photo, $caption) {
         echo "Publishing on Facebook...\n";
-        echo "pageId: $pageId\n";
-        echo "$photoFolder:  $photoFolder\n";
+        echo "page: $pageId\n";
         echo "photo:  $photo\n";
         echo "caption: $caption\n";
         
         $photoPath = $photoFolder. "/" . $photo;
         if (file_exists($photoPath)) {
-            
-        
             try {
                 // Returns a `Facebook\FacebookResponse` object
                 $response = $this->facebookApi->post(
@@ -36,16 +33,16 @@ class FacebookService {
                     array (
                         'source' => $this->facebookApi->fileToUpload($photoPath),
                         'caption' =>  $caption
-                    )
-                    );
+                    ));
             } catch(Facebook\Exceptions\FacebookResponseException $e) {
                 return 'Graph returned an error: ' . $e->getMessage() . "\n";
             } catch(Facebook\Exceptions\FacebookSDKException $e) {
                 return 'Facebook SDK returned an error: ' . $e->getMessage() . "\n";
             }
-            $graphNode = $response->getGraphNode();
+            $postId = $response->getGraphNode()["post_id"];
             
-            return "Succesfully posted \"$photo\" with caption \"$caption\" to page \"$pageId\". (Graph response: $graphNode.)\n";
+            return "Succesfully posted \"$photo\" with caption \"$caption\" to page https://www.facebook.com/$pageId, ".  
+                    "post: https://www.facebook.com/$postId\n";
         }
         else {
             return "Can't post on Facebook, photo does not extist: $photo\n";
