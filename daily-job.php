@@ -25,9 +25,14 @@ function process() {
     $facebookService = new FacebookService($ini["appId"], $ini["appSecret"], $ini["accessToken"]);
     $names = NameDayService::getTodaysNames();
     $email = "Results:\n";
-    foreach ($names as $name) {
+    
+    $messages = $ini["message"];
+    shuffle($messages);
+    
+    foreach ($names as $index => $name) {
         $photo = TextUtil::replaceSpecChars($name) . ".jpg";
-        $result = $facebookService->publishPhoto($ini["pageId"], $ini["photoFolder"], $photo, "Boldog névnapot! :)  #$name #nevnap");
+        $message = sprintf($messages[$index % count($messages)], $name, $name);
+        $result = $facebookService->publishPhoto($ini["pageId"], $ini["photoFolder"], $photo, $message);
         echo $result;
         $email.=$result;
     }
