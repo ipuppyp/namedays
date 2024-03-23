@@ -11,7 +11,7 @@ class FacebookService {
         $this->facebookApi = new \Facebook\Facebook([
             'app_id' => $appId,
             'app_secret' => $appSecret,
-            'default_graph_version' => 'v12.0',
+            'default_graph_version' => 'v19.0',
             'default_access_token' => $accessToken
         ]);
         echo "Facebook service created, appId: $appId \n";
