@@ -7,9 +7,13 @@ require_once __DIR__ . '/service/NameDayService.php';
 require_once __DIR__ . '/service/FacebookService.php';
 require_once __DIR__ . '/util/TextUtil.php';
 
+
 echo "***********************************************\n";
 echo "Welcome to NameDays daily job\n";
 echo "***********************************************\n";
+echo "month: " . $_GET["month"] . "\n";
+echo "day: " . $_GET["day"] . "\n";
+echo "dryRun: " . $_GET["dryRun"] . "\n";
 echo "Job started at " . date("Y-m-d h:i:sa") . "\n";
 
 checkAccess();
@@ -21,9 +25,15 @@ echo "***********************************************\n";
 
 function process() {
     $ini = Configuration::getIni();
-    
     $facebookService = new FacebookService($ini["appId"], $ini["appSecret"], $ini["accessToken"]);
-    $names = NameDayService::getTodaysNames();
+    if (isset($_GET["month"]) && isset($_GET["day"])) {
+            $month = intval($_GET["month"]);
+            $day = intval($_GET["day"]);
+    } else {
+            $month = idate("m");
+            $day = idate("d");
+    }
+    $names = NameDayService::getTodaysNames($month, $day);
     $email = "Results:\n";
     
     $messages = $ini["message"];

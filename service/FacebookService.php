@@ -26,22 +26,25 @@ class FacebookService {
         
         $photoPath = $photoFolder. "/" . $photo;
         if (file_exists($photoPath)) {
-            try {
-                // Returns a `Facebook\FacebookResponse` object
-                $response = $this->facebookApi->post(
-                    '/' . $pageId. '/photos',
-                    array (
-                        'source' => $this->facebookApi->fileToUpload($photoPath),
-                        'caption' =>  $caption
-                    ));
-            } catch(Facebook\Exceptions\FacebookResponseException $e) {
-                return 'Graph returned an error: ' . $e->getMessage() . "\n";
-            } catch(Facebook\Exceptions\FacebookSDKException $e) {
-                return 'Facebook SDK returned an error: ' . $e->getMessage() . "\n";
+            if (!isset($_GET["dryRun"])) {
+                try {
+                    // Returns a `Facebook\FacebookResponse` object
+                    $response = $this->facebookApi->post(
+                        '/' . $pageId. '/photos',
+                        array (
+                            'source' => $this->facebookApi->fileToUpload($photoPath),
+                            'caption' =>  $caption
+                        ));
+                } catch(Facebook\Exceptions\FacebookResponseException $e) {
+                    return 'Graph returned an error: ' . $e->getMessage() . "\n";
+                } catch(Facebook\Exceptions\FacebookSDKException $e) {
+                    return 'Facebook SDK returned an error: ' . $e->getMessage() . "\n";
+                }
+                $postId = $response->getGraphNode()["post_id"];
+            } else {
+                $postId = "DryRunPostId";
             }
-            $postId = $response->getGraphNode()["post_id"];
-            
-            return "Succesfully posted \"$photo\" with caption \"$caption\" to page https://www.facebook.com/$pageId, ".  
+            return "Successfully posted \"$photo\" with caption \"$caption\" to page https://www.facebook.com/$pageId, ".
                     "post: https://www.facebook.com/$postId\n";
         }
         else {
